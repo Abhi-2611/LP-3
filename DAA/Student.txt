@@ -1,0 +1,109 @@
+#1
+contract MarksManagementSystem
+{
+    struct Student
+    {
+        int Id;
+        string f_name;
+        string l_name;
+        int marks;
+    }
+
+    address owner;
+    int public stdCount = 0;
+    mapping (int => Student) public stdRecords;
+
+    modifier onlyOwner
+    {
+        require(owner == msg.sender);
+        _;
+    }
+
+    constructor()
+    {
+        owner == msg.sender;
+    }
+
+    function addNewRecords(int _Id, string memory _f_name, string memory _l_name, int _marks) public onlyOwner 
+    {
+        stdCount = stdCount + 1;
+        stdRecords[stdCount] = Student(_Id, _f_name,_l_name, _marks);
+    }
+
+    function bonusMarks(int _bonus) public onlyOwner
+    {
+        stdRecords[stdCount].marks = stdRecords[stdCount].marks + _bonus;
+    }
+}
+
+
+
+#2
+
+contract Student {
+    struct student {
+        uint256 prn;
+        string name;
+        string class;
+        string department;
+    }
+    uint256 PRN;
+    mapping(uint256 => student) studentMap;
+
+    function addStudent(
+        string memory name,
+        string memory class,
+        string memory department
+    ) public {
+        PRN += 1;
+        studentMap[PRN] = student(PRN, name, class, department);
+    }
+
+    function getStudent(uint256 _id) public view returns (student memory) {
+        return studentMap[_id];
+    }
+
+    function totalStudents() public view returns (uint256) {
+        return (PRN);
+    }
+
+    fallback() external {
+        addStudent("Unknown", "FE", "CSE");
+    }
+}
+
+
+
+#3
+
+
+contract Student_management{
+
+	struct Student{
+		int stud_id;
+		string Name;
+		string Department;
+	}
+
+	Student[] Students;
+
+	function add_stud(int stud_id, string memory Name, string memory Department) public{
+		Student memory stud = Student(stud_id, Name, Department);
+		Students.push(stud);
+	}
+
+	function getStudent(int stud_id) public view returns(string memory, string memory){
+		for(uint i = 0; i < Students.length; i++){
+			Student memory stud = Students[i];
+			if(stud.stud_id == stud_id){
+				return(stud.Name, stud.Department);
+			}
+		}
+        return("Name Not Found", "Department Not Found");
+	}
+
+	//Fallback Function
+	fallback() external payable{
+		Students.push(Student(7, "XYZ", "Mechanical"));
+	}
+}
